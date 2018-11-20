@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Lucrez_Ceva.iml" filepath="$PROJECT_DIR$/Lucrez_Ceva.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lucrez_Ceva_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Lucrez_Ceva_main.iml" group="Lucrez_Ceva" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lucrez_Ceva_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Lucrez_Ceva_test.iml" group="Lucrez_Ceva" />
+    </modules>
+  </component>
+</project>
