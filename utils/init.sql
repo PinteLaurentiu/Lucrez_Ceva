@@ -9,7 +9,7 @@ INSERT INTO userRole(role,user_id) VALUES (0,2);
 
 drop table if exists oauth_client_details;
 create table oauth_client_details (
-  client_id VARCHAR(256) PRIMARY KEY,
+  client_id VARCHAR(100) PRIMARY KEY,
   resource_ids VARCHAR(256),
   client_secret VARCHAR(256),
   scope VARCHAR(256),
@@ -26,7 +26,7 @@ drop table if exists oauth_access_token;
 create table oauth_access_token (
   token_id VARCHAR(256),
   token BLOB,
-  authentication_id VARCHAR(256) PRIMARY KEY,
+  authentication_id VARCHAR(100) PRIMARY KEY,
   user_name VARCHAR(256),
   client_id VARCHAR(256),
   authentication BLOB,

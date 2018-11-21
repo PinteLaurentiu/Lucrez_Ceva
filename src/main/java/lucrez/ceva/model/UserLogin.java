@@ -21,6 +21,6 @@ public class UserLogin implements Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
-//    @OneToOne(optional = false)
-//    private User user;
+    @OneToOne(optional = false)
+    private User user;
 }

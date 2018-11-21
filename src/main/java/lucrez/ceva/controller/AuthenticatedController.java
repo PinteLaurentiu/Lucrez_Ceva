@@ -1,6 +1,6 @@
 package lucrez.ceva.controller;
 
-//import lucrez.ceva.model.UserDetailsWrapper;
+import lucrez.ceva.model.UserDetailsWrapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +14,8 @@ public class AuthenticatedController {
         return "Hello authenticated user!";
     }
 
-//    @GetMapping(value = {"/principal"})
-//    public UserDetailsWrapper userPrincipal(Authentication authentication){
-//        return (UserDetailsWrapper) authentication.getPrincipal();
-//    }
+    @GetMapping(value = {"/principal"})
+    public UserDetailsWrapper userPrincipal(Authentication authentication){
+        return (UserDetailsWrapper) authentication.getPrincipal();
+    }
 }
