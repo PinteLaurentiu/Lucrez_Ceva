@@ -7,6 +7,7 @@ import lucrez.ceva.model.UserDetails;
 import lucrez.ceva.persistence.UserRepo;
 import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class UserService implements IUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails details = authentication == null ? null : (UserDetails) authentication.getPrincipal();
         Long id = details == null ? null : details.getId();
-        return id == null ? null : userRepo.getOne(id);
+        return id == null ? null : userRepo.findOne(id);
     }
 
     @Override
@@ -83,8 +84,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getRange(Long offset, Long size) {
-        return userRepo.findAll();
+    public List<User> getRange(Integer page, Integer size) {
+        return userRepo.findAll(new PageRequest(page,size)).getContent();
     }
 
     private static void validateEmail(User user) {

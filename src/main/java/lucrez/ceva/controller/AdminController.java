@@ -26,9 +26,9 @@ public class AdminController {
         return userService.getAll();
     }
 
-    @GetMapping(value="/users/{offset}-{size}")
-    public List<User> listUserRange(@PathVariable Long offset, @PathVariable Long size) {
-        return userService.getRange(offset, size);
+    @GetMapping(value="/users/{page}-{size}")
+    public List<User> listUserRange(@PathVariable Integer page, @PathVariable Integer size) {
+        return userService.getRange(page, size);
     }
 
     @PostMapping(value = "/delete-user/{id}")

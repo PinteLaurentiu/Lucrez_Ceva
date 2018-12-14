@@ -23,5 +23,5 @@ public interface IUserService {
 
     List<User> getAll();
 
-    List<User> getRange(Long offset, Long size);
+    List<User> getRange(Integer page, Integer size);
 }
