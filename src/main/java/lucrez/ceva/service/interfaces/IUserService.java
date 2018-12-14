@@ -2,6 +2,8 @@ package lucrez.ceva.service.interfaces;
 
 import lucrez.ceva.model.User;
 
+import java.util.List;
+
 public interface IUserService {
     boolean save(User user);
 
@@ -18,4 +20,8 @@ public interface IUserService {
     void changeAvatarPath(User user);
 
     void delete(Long id);
+
+    List<User> getAll();
+
+    List<User> getRange(Long offset, Long size);
 }

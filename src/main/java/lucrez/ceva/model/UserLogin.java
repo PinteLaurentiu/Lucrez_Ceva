@@ -1,5 +1,6 @@
 package lucrez.ceva.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class UserLogin {
     private String email;
 
     @OneToOne(optional = false)
+    @JsonIgnore
     private User user;
 
     private transient String password;

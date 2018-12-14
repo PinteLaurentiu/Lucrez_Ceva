@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
@@ -74,6 +75,16 @@ public class UserService implements IUserService {
     @Override
     public void delete(Long id) {
         userRepo.delete(id);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepo.findAll();
+    }
+
+    @Override
+    public List<User> getRange(Long offset, Long size) {
+        return userRepo.findAll();
     }
 
     private static void validateEmail(User user) {
