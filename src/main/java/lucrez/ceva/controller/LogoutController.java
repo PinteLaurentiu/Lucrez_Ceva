@@ -3,6 +3,7 @@ package lucrez.ceva.controller;
 import lucrez.ceva.dto.ResponseStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class LogoutController {
-
     @Resource(name = "tokenServices")
     ConsumerTokenServices tokenServices;
 
@@ -25,5 +25,10 @@ public class LogoutController {
             tokenServices.revokeToken(tokenId);
         }
         return ResponseStatus.create();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> catchExceptions(Exception ex) {
+        return ResponseStatus.create(ex);
     }
 }

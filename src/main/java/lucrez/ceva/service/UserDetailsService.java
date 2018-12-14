@@ -1,16 +1,17 @@
 package lucrez.ceva.service;
 
 import lombok.AllArgsConstructor;
-import lucrez.ceva.model.*;
+import lucrez.ceva.model.UserDetails;
+import lucrez.ceva.model.UserLogin;
+import lucrez.ceva.model.UserRole;
 import lucrez.ceva.model.enums.Role;
 import lucrez.ceva.persistence.UserLoginRepo;
 import lucrez.ceva.persistence.UserRoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,8 @@ public class UserDetailsService implements org.springframework.security.core.use
                 .email(userLogin.getEmail())
                 .roles(getRoles(userRoles))
                 .password(userLogin.getBcrypPassword())
-                .isActivated(userLogin.getUser().getActivation().isActivated())
+                .isActivated(userLogin.getUser().getActivation().isActivated() ||
+                        userLogin.getUser().getActivation().getExpiration().plusDays(-29).isAfter(LocalDateTime.now()))
                 .id(userLogin.getUser().getId())
                 .build();
     }

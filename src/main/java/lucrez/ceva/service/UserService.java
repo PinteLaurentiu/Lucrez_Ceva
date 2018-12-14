@@ -60,6 +60,22 @@ public class UserService implements IUserService {
         return userRepo.getOne(id);
     }
 
+    @Override
+    public String getAvatarPath(User user) {
+        return "avatar/"+user.getId();
+    }
+
+    @Override
+    public void changeAvatarPath(User user) {
+        user.setAvatarPath(getAvatarPath(user));
+        update(user);
+    }
+
+    @Override
+    public void delete(Long id) {
+        userRepo.delete(id);
+    }
+
     private static void validateEmail(User user) {
         if (!EmailService.isEmailValid(user.getUserLogin().getEmail()))
             throw new ValidationException("Email has invalid form");
