@@ -22,19 +22,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				.antMatchers("/", "/webjars/**", "/unauthenticated/**").permitAll()
-				.antMatchers("/authenticated/**","/oauth/token").hasRole("USER")
+		http
+            .authorizeRequests()
+                .antMatchers( "/", "/webjars/**", "/unauthenticated/**").permitAll()
+				.antMatchers("/authenticated/**").hasRole("USER")
 				.antMatchers("/admin/**").hasRole("ADMIN")
-				.anyRequest()
-						.authenticated().and().logout()
-						.logoutSuccessUrl("/").permitAll().and().csrf()
-						.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
-        // OAuth2AccessDeniedHandler ->
-        //		If authorization fails and the caller has asked for a specific content type response,
-		// 			this entry point can send one, along with a standard 403 status.
-		// 		Add to the Spring Security configuration as an AccessDeniedHandler in the usual way.
+			.and().logout().permitAll()
+            .and().csrf().disable();
 	}
 
 }

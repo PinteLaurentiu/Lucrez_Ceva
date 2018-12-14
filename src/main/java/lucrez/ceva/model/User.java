@@ -1,20 +1,19 @@
 package lucrez.ceva.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import lucrez.ceva.model.enums.Gender;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
 @SuppressWarnings("WeakerAccess")
 @Entity(name = "user")
-@Data
-@ToString(exclude = {"userLogin", "userRoles"})
-public class User implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+public class User {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -31,6 +30,12 @@ public class User implements Serializable {
     private Gender gender;
     @Column
     private String location;
+    @Column(length = 10000, nullable = false)
+    private String abilities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<AbilityTag> tags;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -39,4 +44,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<UserRole> userRoles;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private UserActivation activation;
 }

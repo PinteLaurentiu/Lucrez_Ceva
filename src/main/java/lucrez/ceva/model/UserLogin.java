@@ -1,26 +1,28 @@
 package lucrez.ceva.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity(name = "userLogin")
-@Data
-public class UserLogin implements Serializable {
-
-    public static final String QUERY_FIND_USER_ROLES_BY_USER_LOGIN = "QueryFindUserRolesByUserLogin";
-
+@Getter
+@Setter
+@NoArgsConstructor
+public class UserLogin {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
-    private String bcrypPassword="";
+    private String bcrypPassword;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @OneToOne(optional = false)
     private User user;
+
+    private transient String password;
 }

@@ -1,27 +1,27 @@
 package lucrez.ceva.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import lucrez.ceva.model.enums.Role;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Data
-@RequiredArgsConstructor
-public class UserDetailsWrapper implements UserDetails, CredentialsContainer {
-    @NonNull
-    private UserLogin userLogin;
-    @NonNull
-    private List<UserRole> userRoles;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
+public class UserDetails implements org.springframework.security.core.userdetails.UserDetails, CredentialsContainer {
+    private String email;
+    private List<Role> roles;
+    private boolean isActivated;
     @JsonIgnore
     private String password;
+    @JsonIgnore
+    private long id;
 
     @Override
     public void eraseCredentials() {
@@ -30,16 +30,12 @@ public class UserDetailsWrapper implements UserDetails, CredentialsContainer {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> roles = new HashSet<>();
-        for(UserRole userRole : userRoles){
-            roles.add(userRole.getRole().toAuthority());
-        }
-        return roles;
+        return roles.stream().map(Role::toAuthority).collect(Collectors.toList());
     }
 
     @Override
     public String getUsername() {
-        return userLogin.getEmail();
+        return email;
     }
 
     @Override
@@ -59,6 +55,6 @@ public class UserDetailsWrapper implements UserDetails, CredentialsContainer {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActivated;
     }
 }

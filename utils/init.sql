@@ -1,12 +1,3 @@
-INSERT INTO user (id,name,avatarPath) VALUES (1,'Alex Pintilie','');
-INSERT INTO userLogin (id, email, bcrypPassword, user_id) VALUES (1, 'Alex123', /*password*/ '$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',1);
-INSERT INTO userRole(role,user_id) VALUES (0,1);
-INSERT INTO userRole(role,user_id) VALUES (1,1);
-
-INSERT INTO user (id,name,avatarPath) VALUES (2,'Pop Andrei','');
-INSERT INTO userLogin (id, email, bcrypPassword, user_id) VALUES (2, 'Andrei123', /*password*/ '$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',2);
-INSERT INTO userRole(role,user_id) VALUES (0,2);
-
 drop table if exists oauth_client_details;
 create table oauth_client_details (
   client_id VARCHAR(100) PRIMARY KEY,
@@ -44,3 +35,14 @@ INSERT INTO oauth_client_details(client_id, resource_ids, CLIENT_SECRET, SCOPE, 
 VALUES ('IOS-client', 'resource-server-rest-api',
         /*password*/'$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',
         'read,write', 'password,refresh_token', null, 36000, 36000);
+
+INSERT INTO user (id,name,avatarPath,abilities) VALUES (1,'Alex Pintilie','','');
+INSERT INTO userLogin (id, email, bcrypPassword, user_id) VALUES (1, 'Alex123', /*password*/ '$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',1);
+INSERT INTO userRole(role,user_id) VALUES (0,1);
+INSERT INTO userRole(role,user_id) VALUES (1,1);
+INSERT INTO userActivation(activated, expiration, uuid, user_id) VALUES (1, NULL, 'gg', 1);
+
+INSERT INTO user (id,name,avatarPath,abilities) VALUES (2,'Pop Andrei','','');
+INSERT INTO userLogin (id, email, bcrypPassword, user_id) VALUES (2, 'Andrei123', /*password*/ '$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',2);
+INSERT INTO userRole(role,user_id) VALUES (0,2);
+INSERT INTO userActivation(activated, expiration, uuid, user_id) VALUES (1, NULL, 'gg2', 2);

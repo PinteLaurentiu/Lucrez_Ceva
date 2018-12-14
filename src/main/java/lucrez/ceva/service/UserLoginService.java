@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service(value = "userService")
+@Service
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
 public class UserLoginService implements IUserLoginService {
 	private UserLoginRepo userLoginRepo;
@@ -24,13 +24,11 @@ public class UserLoginService implements IUserLoginService {
 
 	@Override
 	public void delete(long id) {
-
 		userLoginRepo.delete(id);
 	}
 
 	@Override
     public UserLogin save(UserLogin user) {
-
 		return userLoginRepo.save(user);
     }
 }
