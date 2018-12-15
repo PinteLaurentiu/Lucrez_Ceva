@@ -36,6 +36,16 @@ VALUES ('IOS-client', 'resource-server-rest-api',
         /*password*/'$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',
         'read,write', 'password,refresh_token', null, 36000, 36000);
 
+INSERT INTO oauth_client_details(client_id, resource_ids, CLIENT_SECRET, SCOPE, AUTHORIZED_GRANT_TYPES, AUTHORITIES, ACCESS_TOKEN_VALIDITY, REFRESH_TOKEN_VALIDITY)
+VALUES ('Android-client', 'resource-server-rest-api',
+        /*password*/'$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',
+        'read,write', 'password,refresh_token', null, 36000, 36000);
+
+INSERT INTO oauth_client_details(client_id, resource_ids, CLIENT_SECRET, SCOPE, AUTHORIZED_GRANT_TYPES, AUTHORITIES, ACCESS_TOKEN_VALIDITY, REFRESH_TOKEN_VALIDITY)
+VALUES ('Web-client', 'resource-server-rest-api',
+        /*password*/'$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',
+        'read,write', 'password,refresh_token', null, 36000, 36000);
+
 INSERT INTO user (id,name,avatarPath,abilities) VALUES (1,'Alex Pintilie','','');
 INSERT INTO userLogin (id, email, bcrypPassword, user_id) VALUES (1, 'Alex123', /*password*/ '$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu',1);
 INSERT INTO userRole(role,user_id) VALUES (0,1);

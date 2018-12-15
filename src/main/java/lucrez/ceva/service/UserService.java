@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lucrez.ceva.exceptions.ValidationException;
 import lucrez.ceva.model.User;
 import lucrez.ceva.model.UserDetails;
-import lucrez.ceva.persistence.UserRepository;
+import lucrez.ceva.persistence.UserRepo;
 import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
@@ -21,30 +23,30 @@ public class UserService implements IUserService {
             UserService::validatePassword
     );
 
-    private UserRepository userRepository;
+    private UserRepo userRepo;
     private EmailService emailService;
     @Override
     public boolean save(User user) {
         validator.validate(user);
-        userRepository.save(user);
+        userRepo.save(user);
         emailService.sendActivationMail(user.getUserLogin().getEmail(), user.getId(), user.getActivation().getUuid());
         return true;
     }
 
     @Override
     public void activate(long id, String uuid) {
-        User user = userRepository.getOne(id);
+        User user = userRepo.getOne(id);
         if (!user.getActivation().getUuid().equals(uuid))
             throw new ValidationException("UUIDs do no match");
         if (user.getActivation().getExpiration().isBefore(LocalDateTime.now()))
             throw new ValidationException("UUID has expired");
         user.getActivation().setActivated(true);
-        userRepository.save(user);
+        userRepo.save(user);
     }
 
     @Override
     public void update(User user) {
-        userRepository.save(user);
+        userRepo.save(user);
     }
 
     @Override
@@ -52,12 +54,38 @@ public class UserService implements IUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails details = authentication == null ? null : (UserDetails) authentication.getPrincipal();
         Long id = details == null ? null : details.getId();
-        return id == null ? null : userRepository.getOne(id);
+        return id == null ? null : userRepo.findOne(id);
     }
 
     @Override
     public User get(Long id) {
-        return userRepository.getOne(id);
+        return userRepo.getOne(id);
+    }
+
+    @Override
+    public String getAvatarPath(User user) {
+        return "avatar/"+user.getId();
+    }
+
+    @Override
+    public void changeAvatarPath(User user) {
+        user.setAvatarPath(getAvatarPath(user));
+        update(user);
+    }
+
+    @Override
+    public void delete(Long id) {
+        userRepo.delete(id);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepo.findAll();
+    }
+
+    @Override
+    public List<User> getRange(Integer page, Integer size) {
+        return userRepo.findAll(new PageRequest(page,size)).getContent();
     }
 
     private static void validateEmail(User user) {

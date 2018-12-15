@@ -34,19 +34,15 @@ public class User {
     private String abilities;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<AbilityTag> tags;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
     private UserLogin userLogin;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<UserRole> userRoles;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
     private UserActivation activation;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

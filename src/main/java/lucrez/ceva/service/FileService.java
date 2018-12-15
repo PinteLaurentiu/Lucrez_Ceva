@@ -31,6 +31,21 @@ public class FileService implements IFileService {
         uncheckedSave(file, where);
     }
 
+    public FileService() {
+        createFolder(FILES_LOCATION);
+        createFolder(FILES_LOCATION + "/avatar");
+    }
+
+    private static void createFolder(String path) {
+        if (!Files.exists(Paths.get(path))) {
+            try {
+                Files.createDirectory(Paths.get(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void uncheckedSave(MultipartFile file, String where) {
         try (OutputStream out = new FileOutputStream(getLocation(where))) {
             InputStream in = file.getInputStream();
@@ -48,6 +63,7 @@ public class FileService implements IFileService {
 
     private long copyAll(InputStream in, OutputStream out) throws IOException {
         long size = 0;
+
         byte[] buffer = new byte[BUFFER_SIZE];
         int bytesRead = in.read(buffer);
         while (bytesRead != -1) {

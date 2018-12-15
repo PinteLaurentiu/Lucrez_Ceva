@@ -1,5 +1,6 @@
 package lucrez.ceva.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class UserActivation {
     private long id;
 
     @OneToOne(optional = false)
+    @JsonIgnore
     private User user;
 
     @Column(nullable = false)

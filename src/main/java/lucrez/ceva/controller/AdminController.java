@@ -2,13 +2,11 @@ package lucrez.ceva.controller;
 
 import lombok.AllArgsConstructor;
 import lucrez.ceva.dto.ResponseStatus;
-import lucrez.ceva.model.UserLogin;
-import lucrez.ceva.service.interfaces.IUserLoginService;
+import lucrez.ceva.model.User;
+import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ import java.util.List;
 @RequestMapping("/admin")
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
 public class AdminController {
-    private IUserLoginService userLoginService;
+    private IUserService userService;
 
     @GetMapping(value = "/test")
     public ResponseEntity<?> test() {
@@ -24,7 +22,23 @@ public class AdminController {
     }
 
     @GetMapping(value="/users")
-    public List<UserLogin> listUser(){
-        return userLoginService.findAll();
+    public List<User> listUser(){
+        return userService.getAll();
+    }
+
+    @GetMapping(value="/users/{page}-{size}")
+    public List<User> listUserRange(@PathVariable Integer page, @PathVariable Integer size) {
+        return userService.getRange(page, size);
+    }
+
+    @PostMapping(value = "/delete-user/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseStatus.create();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> catchExceptions(Exception ex) {
+        return ResponseStatus.create(ex);
     }
 }

@@ -1,29 +1,20 @@
 package lucrez.ceva.controller;
 
 import lombok.AllArgsConstructor;
-import lucrez.ceva.dto.*;
 import lucrez.ceva.dto.ResponseStatus;
+import lucrez.ceva.dto.UpdateUserDto;
+import lucrez.ceva.dto.UserDto;
 import lucrez.ceva.dto.mappers.UpdateUserMapper;
 import lucrez.ceva.dto.mappers.UserMapper;
 import lucrez.ceva.model.User;
 import lucrez.ceva.service.interfaces.IFileService;
 import lucrez.ceva.service.interfaces.IUserService;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.hibernate.loader.custom.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @RestController
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
@@ -34,13 +25,9 @@ public class UserController {
 
     @PostMapping("/unauthenticated/register")
     public ResponseEntity<?> register(@RequestBody UserDto userDto) {
-        try {
-            User user = mapper.dtoToModelUser(userDto);
-            userService.save(user);
-            return ResponseStatus.create();
-        } catch (Exception ex) {
-            return ResponseError.create(ex.getMessage());
-        }
+        User user = mapper.dtoToModelUser(userDto);
+        userService.save(user);
+        return ResponseStatus.create();
     }
 
     @GetMapping("/unauthenticated/activate")
@@ -76,31 +63,28 @@ public class UserController {
         User user = userService.get(userId);
         if (user == null)
             return ResponseStatus.create("There is no user with this id!");
-        Resource resource = fileService.loadAsResource("avatar/"+userId);
+        Resource resource = fileService.loadAsResource(userService.getAvatarPath(user));
         return ResponseStatus.create(resource);
-    }
-
-
-    @PostMapping("/authenticated/test")
-    public ResponseEntity<?> test(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        fileService.saveAsImage(file, "barbiduc.png");
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/authenticated/update-account-details")
     public ResponseEntity<?> update(@RequestBody UpdateUserDto updateDto) {
-        try {
-            User user = userService.getCurrent();
-            UpdateUserMapper.updateUserDetails(user, updateDto);
-            userService.update(user);
-            return ResponseStatus.create();
-        } catch (Exception ex) {
-            return ResponseError.create(ex.getMessage());
-        }
+        User user = userService.getCurrent();
+        UpdateUserMapper.updateUserDetails(user, updateDto);
+        userService.update(user);
+        return ResponseStatus.create();
     }
 
     @PostMapping("/authenticated/upload-avatar")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+        User user = userService.getCurrent();
+        fileService.saveAsImage(file, userService.getAvatarPath(user));
+        userService.changeAvatarPath(user);
         return ResponseStatus.create();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> catchExceptions(Exception ex) {
+        return ResponseStatus.create(ex);
     }
 }
