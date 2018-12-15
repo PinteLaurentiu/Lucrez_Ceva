@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lucrez.ceva.exceptions.ValidationException;
 import lucrez.ceva.model.User;
 import lucrez.ceva.model.UserDetails;
-import lucrez.ceva.persistence.UserRepo;
+import lucrez.ceva.persistence.UserRepository;
 import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +23,9 @@ public class UserService implements IUserService {
             UserService::validatePassword
     );
 
-    private UserRepo userRepo;
+    private UserRepository userRepo;
     private EmailService emailService;
+
     @Override
     public boolean save(User user) {
         validator.validate(user);
