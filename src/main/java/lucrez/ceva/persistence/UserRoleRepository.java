@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRoleRepo extends JpaRepository<UserRole, Long> {
+public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     @Query("SELECT ur from userRole ur join ur.user.userLogin ul where ul.id = :userLoginId")
     List<UserRole> getAllByUserLoginId(@Param("userLoginId") long id);
 }

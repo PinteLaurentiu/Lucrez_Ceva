@@ -3,8 +3,8 @@ package lucrez.ceva.service;
 import lombok.AllArgsConstructor;
 import lucrez.ceva.model.*;
 import lucrez.ceva.model.enums.Role;
-import lucrez.ceva.persistence.UserLoginRepo;
-import lucrez.ceva.persistence.UserRoleRepo;
+import lucrez.ceva.persistence.UserLoginRepository;
+import lucrez.ceva.persistence.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Service("userDetailsService")
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
-    private final UserLoginRepo userLoginRepo;
-    private final UserRoleRepo userRoleRepo;
+    private final UserLoginRepository userLoginRepo;
+    private final UserRoleRepository userRoleRepo;
 
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {

@@ -48,4 +48,17 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private UserActivation activation;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Job> jobs;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Application> applications;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bookmark", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "job_id"))
+    private Set<Job> bookmarks;
+
 }

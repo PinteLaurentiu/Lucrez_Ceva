@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lucrez.ceva.exceptions.ValidationException;
 import lucrez.ceva.model.User;
 import lucrez.ceva.model.UserDetails;
-import lucrez.ceva.persistence.UserRepo;
+import lucrez.ceva.persistence.UserRepository;
 import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,30 +21,30 @@ public class UserService implements IUserService {
             UserService::validatePassword
     );
 
-    private UserRepo userRepo;
+    private UserRepository userRepository;
     private EmailService emailService;
     @Override
     public boolean save(User user) {
         validator.validate(user);
-        userRepo.save(user);
+        userRepository.save(user);
         emailService.sendActivationMail(user.getUserLogin().getEmail(), user.getId(), user.getActivation().getUuid());
         return true;
     }
 
     @Override
     public void activate(long id, String uuid) {
-        User user = userRepo.getOne(id);
+        User user = userRepository.getOne(id);
         if (!user.getActivation().getUuid().equals(uuid))
             throw new ValidationException("UUIDs do no match");
         if (user.getActivation().getExpiration().isBefore(LocalDateTime.now()))
             throw new ValidationException("UUID has expired");
         user.getActivation().setActivated(true);
-        userRepo.save(user);
+        userRepository.save(user);
     }
 
     @Override
     public void update(User user) {
-        userRepo.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class UserService implements IUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails details = authentication == null ? null : (UserDetails) authentication.getPrincipal();
         Long id = details == null ? null : details.getId();
-        return id == null ? null : userRepo.getOne(id);
+        return id == null ? null : userRepository.getOne(id);
     }
 
     @Override
     public User get(Long id) {
-        return userRepo.getOne(id);
+        return userRepository.getOne(id);
     }
 
     private static void validateEmail(User user) {
