@@ -89,6 +89,16 @@ public class UserService implements IUserService {
         return userRepo.findAll(new PageRequest(page,size)).getContent();
     }
 
+    @Override
+    public List<User> getAll(String name) {
+        return userRepo.findByNameIsContaining(name);
+    }
+
+    @Override
+    public List<User> getRange(String name, Integer page, Integer size) {
+        return userRepo.findByNameIsContaining(name, new PageRequest(page,size));
+    }
+
     private static void validateEmail(User user) {
         if (!EmailService.isEmailValid(user.getUserLogin().getEmail()))
             throw new ValidationException("Email has invalid form");

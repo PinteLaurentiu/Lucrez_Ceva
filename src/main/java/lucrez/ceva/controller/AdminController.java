@@ -31,6 +31,16 @@ public class AdminController {
         return userService.getRange(page, size);
     }
 
+    @GetMapping(value="/users/{name}")
+    public List<User> listUserName(@PathVariable String name) {
+        return userService.getAll(name);
+    }
+
+    @GetMapping(value="/users/{name}/{page}-{size}")
+    public List<User> listUserNameRange(@PathVariable String name, @PathVariable Integer page, @PathVariable Integer size) {
+        return userService.getRange(name, page, size);
+    }
+
     @PostMapping(value = "/delete-user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.delete(id);

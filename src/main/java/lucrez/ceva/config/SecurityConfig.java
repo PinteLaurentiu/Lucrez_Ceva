@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -49,9 +51,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers().antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access","/oauth/token")
+        http.requestMatchers()
+                .antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access","/oauth/token")
                 .and()
-                .authorizeRequests().anyRequest().authenticated();
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .anyRequest().authenticated();
     }
 
     @Bean
@@ -60,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration config = getCorsConfiguration();
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(0);
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
 

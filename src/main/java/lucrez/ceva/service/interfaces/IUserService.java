@@ -24,4 +24,8 @@ public interface IUserService {
     List<User> getAll();
 
     List<User> getRange(Integer page, Integer size);
+
+    List<User> getAll(String name);
+
+    List<User> getRange(String name, Integer page, Integer size);
 }
