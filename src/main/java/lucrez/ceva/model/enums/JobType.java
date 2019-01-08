@@ -1,6 +1,6 @@
 package lucrez.ceva.model.enums;
 
-public enum TipJob {
+public enum JobType {
     Zilnic,
     Saptamanal,
     Lunar,

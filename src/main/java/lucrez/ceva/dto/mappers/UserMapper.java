@@ -7,11 +7,13 @@ import lucrez.ceva.model.*;
 import lucrez.ceva.model.enums.Role;
 import lucrez.ceva.service.Validator;
 import lucrez.ceva.service.staticService.AvatarService;
+import lucrez.ceva.service.staticService.DateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -38,7 +40,6 @@ public class UserMapper {
     private void mapSimpleProperties(UserDto dto, User user) {
         user.setAvatarPath(AvatarService.getDefaultAvatar());
         user.setName(dto.getName());
-        user.setAbilities("");
         user.setTags(new HashSet<>());
     }
 
@@ -54,7 +55,7 @@ public class UserMapper {
     private UserActivation createActivation(User user) {
         UserActivation activation = new UserActivation();
         activation.setActivated(false);
-        activation.setExpiration(LocalDateTime.now().plusDays(30));
+        activation.setExpiration(DateTimeService.addDays(new Date(), 30));
         activation.setUuid(UUID.randomUUID().toString());
         activation.setUser(user);
         return activation;
@@ -69,7 +70,7 @@ public class UserMapper {
         return userLogin;
     }
 
-    private String encodePassword(String password) {
+    public String encodePassword(String password) {
         return userPasswordEncoder.encode(password);
     }
 

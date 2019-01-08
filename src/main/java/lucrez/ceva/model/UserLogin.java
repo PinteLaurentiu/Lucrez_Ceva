@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name = "userLogin")
+@Entity(name = "user_login")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,6 +16,7 @@ public class UserLogin {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String bcrypPassword;
 

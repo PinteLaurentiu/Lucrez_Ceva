@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lucrez.ceva.exceptions.ValidationException;
 import lucrez.ceva.model.User;
 import lucrez.ceva.model.UserDetails;
+import lucrez.ceva.model.UserLogin;
 import lucrez.ceva.persistence.UserRepository;
 import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,7 +40,7 @@ public class UserService implements IUserService {
         User user = userRepo.getOne(id);
         if (!user.getActivation().getUuid().equals(uuid))
             throw new ValidationException("UUIDs do no match");
-        if (user.getActivation().getExpiration().isBefore(LocalDateTime.now()))
+        if (user.getActivation().getExpiration().before(new Date()))
             throw new ValidationException("UUID has expired");
         user.getActivation().setActivated(true);
         userRepo.save(user);
@@ -53,7 +54,9 @@ public class UserService implements IUserService {
     @Override
     public User getCurrent() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails details = authentication == null ? null : (UserDetails) authentication.getPrincipal();
+        if (!(authentication.getPrincipal() instanceof UserDetails))
+            return null;
+        UserDetails details = (UserDetails) authentication.getPrincipal();
         Long id = details == null ? null : details.getId();
         return id == null ? null : userRepo.findOne(id);
     }
@@ -69,8 +72,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void changeAvatarPath(User user) {
-        user.setAvatarPath(getAvatarPath(user));
+    public void changeAvatarPath(User user, String extension) {
+        user.setAvatarPath("/unauthenticated/avatar-" + user.getId() + "/avatar." + extension);
         update(user);
     }
 
@@ -97,6 +100,18 @@ public class UserService implements IUserService {
     @Override
     public List<User> getRange(String name, Integer page, Integer size) {
         return userRepo.findByNameIsContaining(name, new PageRequest(page,size));
+    }
+
+    @Override
+    public void updatePassword(Long id, String bCryptPassword, String password) {
+        User user = userRepo.findOne(id);
+        if (user == null)
+            throw new NullPointerException();
+        UserLogin userLogin = user.getUserLogin();
+        userLogin.setBcrypPassword(bCryptPassword);
+        userLogin.setPassword(password);
+        validator.validate(user);
+        userRepo.save(user);
     }
 
     private static void validateEmail(User user) {

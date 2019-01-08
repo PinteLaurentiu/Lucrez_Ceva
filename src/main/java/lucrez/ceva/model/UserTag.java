@@ -2,26 +2,23 @@ package lucrez.ceva.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lucrez.ceva.model.enums.Role;
 
 import javax.persistence.*;
 
+@Entity(name = "user_tag")
 @Getter
 @Setter
-@NoArgsConstructor
-@Entity(name = "abilityTag")
-public class AbilityTag {
+public class UserTag {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String tag;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
-
-    @Column(nullable = false)
-    private String ability;
 }

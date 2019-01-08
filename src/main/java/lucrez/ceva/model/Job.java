@@ -3,11 +3,12 @@ package lucrez.ceva.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lucrez.ceva.model.enums.TipJob;
+import lucrez.ceva.model.enums.JobAcceptanceType;
+import lucrez.ceva.model.enums.JobType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 @Entity(name ="job")
@@ -21,26 +22,27 @@ public class Job {
     private Long id;
 
     @Column(nullable = false)
-    private String descriere;
+    private String description;
 
     @Column(nullable = false)
-    private String titlu;
+    private String title;
 
     @Column(nullable = false)
-    private String locatie;
+    private String location;
 
     @Column(nullable = false)
-    private LocalDate data;
+    @Temporal(value = TemporalType.DATE)
+    private Date date;
 
     @Column
-    private LocalDate dataExpirarii;
+    @Temporal(value = TemporalType.DATE)
+    private Date expireDate;
 
     @Column
-    private TipJob tipJob;
+    private JobType jobType;
 
-    @Column(name = "tags")
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> tags;
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<JobTag> tags;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
@@ -52,6 +54,11 @@ public class Job {
     private Set<Application> applications;
 
     @ManyToMany(mappedBy = "bookmarks")
-    private Set<User> users;
+    private Set<User> bookmarks;
 
+    @Column
+    private Double salary;
+
+    @Column(nullable = false)
+    private JobAcceptanceType acceptanceType;
 }

@@ -1,23 +1,20 @@
 package lucrez.ceva.controller;
 
 import lombok.AllArgsConstructor;
-import lucrez.ceva.dto.JobDto;
-import lucrez.ceva.dto.ResponseError;
+import lucrez.ceva.dto.JobAddDto;
 import lucrez.ceva.dto.ResponseStatus;
 import lucrez.ceva.dto.mappers.ApplicationMapper;
 import lucrez.ceva.dto.mappers.JobMapper;
-import lucrez.ceva.model.Application;
-import lucrez.ceva.model.Job;
-import lucrez.ceva.model.User;
+import lucrez.ceva.model.*;
 import lucrez.ceva.service.interfaces.IApplicationService;
 import lucrez.ceva.service.interfaces.IJobService;
 import lucrez.ceva.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+//Problema 1 BOULE
 @RestController
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
 public class JobController {
@@ -25,39 +22,58 @@ public class JobController {
     private IUserService userService;
     private IApplicationService applicationService;
 
-    @GetMapping("/authenticated/getAll")
-    public List<Job> getAll(){
-        return jobService.findAll();
+    @PostMapping("/unauthenticated/getAll")
+    public ResponseEntity<?> getAll(@RequestBody JobFilter jobFilter) {
+        User current = userService.getCurrent();
+        return new ResponseEntity<>(JobMapper.mapJobSimpleDto(jobService.getAll(jobFilter), current), HttpStatus.OK);
+    }
+
+    @PostMapping("/unauthenticated/getAll/{page}-{size}")
+    public ResponseEntity<?> getAll(@RequestBody JobPageableFilter jobFilter,
+                                    @PathVariable int page,
+                                    @PathVariable int size) {
+        User current = userService.getCurrent();
+        jobFilter.setPage(page);
+        jobFilter.setPageSize(size);
+        return new ResponseEntity<>(JobMapper.mapJobSimpleDto(jobService.getRange(jobFilter), current), HttpStatus.OK);
+    }
+
+    @PostMapping("/authenticated/getAll")
+    public ResponseEntity<?> getRecommended(@RequestBody JobFilter jobFilter) {
+        User current = userService.getCurrent();
+        return new ResponseEntity<>(JobMapper.mapJobSimpleDto(jobService.getAll(current, jobFilter), current), HttpStatus.OK);
+    }
+
+    @PostMapping("/authenticated/getAll/{page}-{size}")
+    public ResponseEntity<?> getRecommended(@RequestBody JobPageableFilter jobFilter,
+                                            @PathVariable int page,
+                                            @PathVariable int size) {
+        User current = userService.getCurrent();
+        jobFilter.setPage(page);
+        jobFilter.setPageSize(size);
+        return new ResponseEntity<>(JobMapper.mapJobSimpleDto(jobService.getAll(current, jobFilter), current), HttpStatus.OK);
     }
 
     @PostMapping("/authenticated/add")
-    public ResponseEntity<?> save(@RequestBody JobDto jobDto){
+    public ResponseEntity<?> save(@RequestBody JobAddDto jobAddDto){
         User user = userService.getCurrent();
-        Job job = JobMapper.dtoToModelJob(user, jobDto);
+        Job job = JobMapper.dtoToModelJob(user, jobAddDto);
         jobService.save(job);
         return ResponseStatus.create();
     }
 
     @PostMapping("/authenticated/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody JobDto jobDto){
-        try {
-            Job job = jobService.getById(id);//TODO : throw an Exception maybe differently
-            JobMapper.updateModelWithDto(job, jobDto);
-            jobService.save(job);
-            return ResponseStatus.create();
-        }catch (Exception ex) {
-            return ResponseError.create(ex.getMessage());
-        }
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody JobAddDto jobAddDto){
+        Job job = jobService.getById(id);
+        JobMapper.updateModelWithDto(job, jobAddDto);
+        jobService.save(job);
+        return ResponseStatus.create();
     }
 
     @PostMapping("/authenticated/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
-        try{
-            jobService.delete(id);
-            return ResponseStatus.create();
-        } catch (Exception ex) {
-            return ResponseError.create(ex.getMessage());
-        }
+        jobService.delete(id);
+        return ResponseStatus.create();
     }
 
     @PostMapping("/authenticated/apply/{id}")
@@ -72,9 +88,42 @@ public class JobController {
     @PostMapping("/authenticated/bookmark/{id}")
     public ResponseEntity<?> bookmark(@PathVariable Long id){
         Job job = jobService.getById(id);
+        if (job == null)
+            throw new NullPointerException();
         User user = userService.getCurrent();
         user.getBookmarks().add(job);
         userService.update(user);
         return ResponseStatus.create();
+    }
+
+    @PostMapping("/authenticated/remove_bookmark/{id}")
+    public ResponseEntity<?> remove_bookmark(@PathVariable Long id){
+        User user = userService.getCurrent();
+        Job job = user.getBookmarks().stream().filter(x-> x.getId().equals(id)).findAny().orElse(null);
+        if (job == null)
+            throw new NullPointerException();
+        user.getBookmarks().remove(job);
+        userService.update(user);
+        return ResponseStatus.create();
+    }
+
+    @GetMapping("/authenticated/getBookmarks")
+    public ResponseEntity<?> getBookmarks() {
+        User user = userService.getCurrent();
+        return new ResponseEntity<>(JobMapper.mapJobSimpleDto(user.getBookmarks(), user), HttpStatus.OK);
+    }
+
+    @GetMapping("/unauthenticated/getJob/{id}")
+    public ResponseEntity<?> getJob(@PathVariable Long id) {
+        User user = userService.getCurrent();
+        Job job = jobService.getById(id);
+        if (job == null)
+            throw new NullPointerException();
+        return new ResponseEntity<>(JobMapper.createJobDetailedDto(job, user), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> catchExceptions(Exception ex) {
+        return ResponseStatus.create(ex);
     }
 }

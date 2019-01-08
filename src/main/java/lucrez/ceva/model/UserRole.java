@@ -6,7 +6,7 @@ import lucrez.ceva.model.enums.Role;
 
 import javax.persistence.*;
 
-@Entity(name = "userRole")
+@Entity(name = "user_role")
 @Getter
 @Setter
 @NoArgsConstructor

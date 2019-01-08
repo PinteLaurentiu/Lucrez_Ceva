@@ -8,11 +8,16 @@ import java.nio.file.Path;
 
 public interface IFileService {
     void save(MultipartFile file, String where);
+
     void saveAsImage(MultipartFile file, String where);
+
     boolean isImage(MultipartFile file);
+
     Path load(String location);
 
     Resource loadAsResource(String s);
 
     InputStream loadAsStream(String s);
+
+    String getImageExtension(MultipartFile file);
 }

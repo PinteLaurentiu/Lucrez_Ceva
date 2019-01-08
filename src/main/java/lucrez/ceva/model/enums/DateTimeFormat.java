@@ -1,17 +1,17 @@
 package lucrez.ceva.model.enums;
 
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 
 public enum DateTimeFormat {
-    IsoDate(DateTimeFormatter.ISO_LOCAL_DATE);
+    IsoDate(new SimpleDateFormat("yyyy-MM-dd"));
 
-    private DateTimeFormatter formatter;
+    private SimpleDateFormat formatter;
 
-    DateTimeFormat(DateTimeFormatter formatter) {
+    DateTimeFormat(SimpleDateFormat formatter) {
         this.formatter = formatter;
     }
 
-    public DateTimeFormatter getFormatter() {
+    public SimpleDateFormat getFormatter() {
         return formatter;
     }
 }

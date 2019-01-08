@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    @Query("SELECT ur from userRole ur join ur.user.userLogin ul where ul.id = :userLoginId")
+    @Query("SELECT ur from user_role ur where ur.user.userLogin.id = :userLoginId")
     List<UserRole> getAllByUserLoginId(@Param("userLoginId") long id);
 }

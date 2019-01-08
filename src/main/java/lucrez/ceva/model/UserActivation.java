@@ -7,8 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
-@Entity(name = "userActivation")
+@Entity(name = "user_activation")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +26,8 @@ public class UserActivation {
     private String uuid;
 
     @Column
-    private LocalDateTime expiration;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiration;
 
     @Column(nullable = false)
     private boolean activated;

@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/unauthenticated/avatar-{userId}/avatar.jpg", produces = "image/jpeg")
+    @GetMapping(value = "/unauthenticated/avatar-{userId}/avatar.jpeg", produces = "image/jpeg")
     public ResponseEntity<?> jpegAvatar(@PathVariable Long userId) {
         return getAvatar(userId);
     }
@@ -79,8 +79,18 @@ public class UserController {
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
         User user = userService.getCurrent();
         fileService.saveAsImage(file, userService.getAvatarPath(user));
-        userService.changeAvatarPath(user);
+        userService.changeAvatarPath(user, fileService.getImageExtension(file));
         return ResponseStatus.create();
+    }
+
+    @GetMapping(value = "/authenticated/test")
+    public ResponseEntity<?> test() {
+        return ResponseStatus.create();
+    }
+
+    @GetMapping(value = "/authenticated/whoAmI")
+    public User userPrincipal() {
+        return userService.getCurrent();
     }
 
     @ExceptionHandler(Exception.class)

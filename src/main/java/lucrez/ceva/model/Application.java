@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,5 +27,6 @@ public class Application {
     private User user;
 
     @Column
-    private LocalDate date;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 }

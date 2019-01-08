@@ -6,6 +6,7 @@ import lucrez.ceva.model.enums.Gender;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @SuppressWarnings("WeakerAccess")
@@ -23,18 +24,17 @@ public class User {
     @Column
     private String phone;
     @Column
-    private LocalDate birthday;
+    @Temporal(TemporalType.DATE)
+    private Date birthday;
     @Column(nullable = false)
     private String avatarPath;
     @Column
     private Gender gender;
     @Column
     private String location;
-    @Column(length = 10000, nullable = false)
-    private String abilities;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<AbilityTag> tags;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserTag> tags;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserLogin userLogin;

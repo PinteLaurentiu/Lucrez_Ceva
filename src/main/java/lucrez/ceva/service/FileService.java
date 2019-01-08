@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class FileService implements IFileService {
     private static final int BUFFER_SIZE = 0x1000; // 4KB
-    private static final long MAX_SIZE = 0x300000; // 3MB
+    private static final long MAX_SIZE = 0x500000; // 3MB
     private static final List<String> imageTypes = Arrays.asList("image/png", "image/jpeg", "image/bmp");
     private static final String FILES_LOCATION = "files/";
 
@@ -121,6 +121,12 @@ public class FileService implements IFileService {
         } catch (IOException e) {
             throw new RuntimeException("Could not read file: " + filename, e);
         }
+    }
+
+    @Override
+    public String getImageExtension(MultipartFile file) {
+        imageValidator.validate(file);
+        return file.getContentType().substring(6);
     }
 
     private void validateSize(MultipartFile multipartFile) {
