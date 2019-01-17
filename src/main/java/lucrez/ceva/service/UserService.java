@@ -114,6 +114,11 @@ public class UserService implements IUserService {
         userRepo.save(user);
     }
 
+    @Override
+    public Long size() {
+        return userRepo.count();
+    }
+
     private static void validateEmail(User user) {
         if (!EmailService.isEmailValid(user.getUserLogin().getEmail()))
             throw new ValidationException("Email has invalid form");

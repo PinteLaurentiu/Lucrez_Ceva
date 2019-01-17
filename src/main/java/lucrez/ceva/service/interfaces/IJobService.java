@@ -18,8 +18,7 @@ public interface IJobService {
     void delete(long id);
     Job getById(Long id);
     void approval(Long id, Boolean approved);
-
     Long countByType(JobType jobType);
-
     Long countByDate(Date date);
+    Long size();
 }

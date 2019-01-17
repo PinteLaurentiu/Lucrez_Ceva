@@ -30,4 +30,6 @@ public interface IUserService {
     List<User> getRange(String name, Integer page, Integer size);
 
     void updatePassword(Long id, String bCryptPassword, String password);
+
+    Long size();
 }

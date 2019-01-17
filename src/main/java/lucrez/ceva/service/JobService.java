@@ -77,4 +77,9 @@ public class JobService implements IJobService {
     public Long countByDate(Date date) {
         return jobRepository.countByDate(date);
     }
+
+    @Override
+    public Long size() {
+        return jobRepository.count();
+    }
 }

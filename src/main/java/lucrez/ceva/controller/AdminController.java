@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lucrez.ceva.dto.JobDateStatisticDto;
 import lucrez.ceva.dto.JobTypeStatisticDto;
 import lucrez.ceva.dto.ResponseStatus;
+import lucrez.ceva.dto.mappers.UserAdminMapper;
 import lucrez.ceva.dto.mappers.UserMapper;
 import lucrez.ceva.model.User;
 import lucrez.ceva.model.enums.JobType;
@@ -35,23 +36,28 @@ public class AdminController {
     }
 
     @GetMapping(value="/users")
-    public List<User> listUser(){
-        return userService.getAll();
+    public ResponseEntity<?> listUser(){
+        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getAll()), HttpStatus.OK);
     }
 
     @GetMapping(value="/users/{page}-{size}")
-    public List<User> listUserRange(@PathVariable Integer page, @PathVariable Integer size) {
-        return userService.getRange(page, size);
+    public ResponseEntity<?> listUserRange(@PathVariable int page, @PathVariable int size) {
+        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getRange(page, size)), HttpStatus.OK);
     }
 
-    @GetMapping(value="/users/{name}")
-    public List<User> listUserName(@PathVariable String name) {
-        return userService.getAll(name);
+    @GetMapping(value="/users_search/{name}")
+    public ResponseEntity<?> listUserName(@PathVariable String name) {
+        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getAll(name)), HttpStatus.OK);
     }
 
-    @GetMapping(value="/users/{name}/{page}-{size}")
-    public List<User> listUserNameRange(@PathVariable String name, @PathVariable Integer page, @PathVariable Integer size) {
-        return userService.getRange(name, page, size);
+    @GetMapping(value="/users_search/{name}/{page}-{size}")
+    public ResponseEntity<?> listUserNameRange(@PathVariable String name, @PathVariable Integer page, @PathVariable Integer size) {
+        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getRange(name, page, size)), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/users_count")
+    public ResponseEntity<?> usersCount() {
+        return new ResponseEntity<>(userService.size(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/delete_user/{id}")
@@ -59,7 +65,6 @@ public class AdminController {
         userService.delete(id);
         return ResponseStatus.create();
     }
-
 
     @PostMapping(value = "/change_password/{id}")
     public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody String password) {
@@ -89,6 +94,11 @@ public class AdminController {
             date = DateTimeService.addDays(date, -1);
         }
         return new ResponseEntity<>(statistics, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/job_count")
+    public ResponseEntity<?> jobCount() {
+        return new ResponseEntity<>(jobService.size(), HttpStatus.OK);
     }
 
     @ExceptionHandler(Exception.class)
