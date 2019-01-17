@@ -95,19 +95,24 @@ public class JobController {
         return ResponseStatus.create();
     }
 
-    @PostMapping("/authenticated/bookmark/{id}/{bookmarked}")
-    public ResponseEntity<?> bookmark(@PathVariable Long id, @PathVariable Boolean bookmarked){
+    @PostMapping("/authenticated/bookmark/{id}")
+    public ResponseEntity<?> bookmark(@PathVariable Long id){
+        Job job = jobService.getById(id);
+        if (job == null)
+            throw new NullPointerException();
         User user = userService.getCurrent();
-        Job jobSrv = jobService.getById(id);
-        if (jobSrv == null)
-            throw new NullPointerException();
+        user.getBookmarks().add(job);
+        userService.update(user);
+        return ResponseStatus.create();
+    }
+
+    @PostMapping("/authenticated/remove_bookmark/{id}")
+    public ResponseEntity<?> remove_bookmark(@PathVariable Long id){
+        User user = userService.getCurrent();
         Job job = user.getBookmarks().stream().filter(x-> x.getId().equals(id)).findAny().orElse(null);
-        if (job == null && !bookmarked)
+        if (job == null)
             throw new NullPointerException();
-        if (bookmarked)
-            user.getBookmarks().add(jobSrv);
-        else
-            user.getBookmarks().remove(job);
+        user.getBookmarks().remove(job);
         userService.update(user);
         return ResponseStatus.create();
     }
