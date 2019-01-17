@@ -94,4 +94,8 @@ public class JobMapper {
         dto.setTags(job.getTags().stream().map(JobTag::getTag).collect(Collectors.toList()));
         return dto;
     }
+
+    public static List<JobDetailedDto> createJobDetailedDto(List<Job> job, User user) {
+        return job.stream().map((x)->createJobDetailedDto(x, user)).collect(Collectors.toList());
+    }
 }

@@ -38,6 +38,16 @@ public class JobController {
         return new ResponseEntity<>(JobMapper.mapJobSimpleDto(jobService.getRange(jobFilter), current), HttpStatus.OK);
     }
 
+    @PostMapping("/unauthenticated/getAllDetailed/{page}-{size}")
+    public ResponseEntity<?> getAllDetailed(@RequestBody JobPageableFilter jobFilter,
+                                    @PathVariable int page,
+                                    @PathVariable int size) {
+        User current = userService.getCurrent();
+        jobFilter.setPage(page);
+        jobFilter.setPageSize(size);
+        return new ResponseEntity<>(JobMapper.createJobDetailedDto(jobService.getRange(jobFilter), current), HttpStatus.OK);
+    }
+
     @PostMapping("/authenticated/getAll")
     public ResponseEntity<?> getRecommended(@RequestBody JobFilter jobFilter) {
         User current = userService.getCurrent();
