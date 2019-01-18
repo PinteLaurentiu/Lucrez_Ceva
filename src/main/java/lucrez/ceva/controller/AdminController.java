@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lucrez.ceva.dto.JobDateStatisticDto;
 import lucrez.ceva.dto.JobTypeStatisticDto;
 import lucrez.ceva.dto.ResponseStatus;
-import lucrez.ceva.dto.mappers.UserAdminMapper;
+import lucrez.ceva.dto.mappers.UserSDMapper;
 import lucrez.ceva.dto.mappers.UserMapper;
-import lucrez.ceva.model.User;
 import lucrez.ceva.model.enums.JobType;
 import lucrez.ceva.service.interfaces.IJobService;
 import lucrez.ceva.service.interfaces.IUserService;
@@ -37,22 +36,22 @@ public class AdminController {
 
     @GetMapping(value="/users")
     public ResponseEntity<?> listUser(){
-        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getAll()), HttpStatus.OK);
+        return new ResponseEntity<>(UserSDMapper.toDto(userService.getAll()), HttpStatus.OK);
     }
 
     @GetMapping(value="/users/{page}-{size}")
     public ResponseEntity<?> listUserRange(@PathVariable int page, @PathVariable int size) {
-        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getRange(page, size)), HttpStatus.OK);
+        return new ResponseEntity<>(UserSDMapper.toDto(userService.getRange(page, size)), HttpStatus.OK);
     }
 
     @GetMapping(value="/users_search/{name}")
     public ResponseEntity<?> listUserName(@PathVariable String name) {
-        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getAll(name)), HttpStatus.OK);
+        return new ResponseEntity<>(UserSDMapper.toDto(userService.getAll(name)), HttpStatus.OK);
     }
 
     @GetMapping(value="/users_search/{name}/{page}-{size}")
     public ResponseEntity<?> listUserNameRange(@PathVariable String name, @PathVariable Integer page, @PathVariable Integer size) {
-        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getRange(name, page, size)), HttpStatus.OK);
+        return new ResponseEntity<>(UserSDMapper.toDto(userService.getRange(name, page, size)), HttpStatus.OK);
     }
 
     @GetMapping(value = "/users_count")

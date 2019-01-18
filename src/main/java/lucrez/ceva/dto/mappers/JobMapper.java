@@ -92,7 +92,7 @@ public class JobMapper {
         dto.setUsername(job.getUser().getName());
         dto.setSalary(job.getSalary());
         dto.setTags(job.getTags().stream().map(JobTag::getTag).collect(Collectors.toList()));
-        dto.setApplications(job.getApplications().stream().map(x->UserAdminMapper.toDto(x.getUser()))
+        dto.setApplications(job.getApplications().stream().map(x-> UserSDMapper.toDto(x.getUser()))
                 .collect(Collectors.toList()));
         dto.setUserId(job.getUser().getId());
         return dto;

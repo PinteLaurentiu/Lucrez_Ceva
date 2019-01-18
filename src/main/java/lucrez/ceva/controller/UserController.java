@@ -5,7 +5,7 @@ import lucrez.ceva.dto.ResponseStatus;
 import lucrez.ceva.dto.UpdateUserDto;
 import lucrez.ceva.dto.UserDto;
 import lucrez.ceva.dto.mappers.UpdateUserMapper;
-import lucrez.ceva.dto.mappers.UserAdminMapper;
+import lucrez.ceva.dto.mappers.UserSDMapper;
 import lucrez.ceva.dto.mappers.UserMapper;
 import lucrez.ceva.model.User;
 import lucrez.ceva.service.interfaces.IFileService;
@@ -91,12 +91,12 @@ public class UserController {
 
     @GetMapping(value = "/authenticated/whoAmI")
     public ResponseEntity<?> userPrincipal() {
-        return new ResponseEntity<>(UserAdminMapper.toDto(userService.getCurrent()), HttpStatus.OK);
+        return new ResponseEntity<>(UserSDMapper.toDetailedDto(userService.getCurrent()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/unauthenticated/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
-        return new ResponseEntity<>(UserAdminMapper.toDto(userService.get(id)), HttpStatus.OK);
+        return new ResponseEntity<>(UserSDMapper.toDetailedDto(userService.get(id)), HttpStatus.OK);
     }
 
     @ExceptionHandler(Exception.class)
