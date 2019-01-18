@@ -1,9 +1,11 @@
 package lucrez.ceva.controller;
 
 import lombok.AllArgsConstructor;
+import lucrez.ceva.dto.JobActionDto;
 import lucrez.ceva.dto.JobAddDto;
 import lucrez.ceva.dto.ResponseStatus;
 import lucrez.ceva.dto.mappers.ApplicationMapper;
+import lucrez.ceva.dto.mappers.JobActionMapper;
 import lucrez.ceva.dto.mappers.JobMapper;
 import lucrez.ceva.model.*;
 import lucrez.ceva.service.interfaces.IApplicationService;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 //Problema 1 BOULE
 @RestController
@@ -130,6 +134,13 @@ public class JobController {
         if (job == null)
             throw new NullPointerException();
         return new ResponseEntity<>(JobMapper.createJobDetailedDto(job, user), HttpStatus.OK);
+    }
+
+    @GetMapping("/authenticated/history")
+    public ResponseEntity<?> getHistory() {
+        User user = userService.getCurrent();
+        List<JobAction> actions = jobService.getHistory(user);
+        return new ResponseEntity<>(JobActionMapper.toDto(actions,user), HttpStatus.OK);
     }
 
     @ExceptionHandler(Exception.class)

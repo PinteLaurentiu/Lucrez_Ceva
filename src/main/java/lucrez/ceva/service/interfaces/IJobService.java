@@ -1,9 +1,6 @@
 package lucrez.ceva.service.interfaces;
 
-import lucrez.ceva.model.Job;
-import lucrez.ceva.model.JobFilter;
-import lucrez.ceva.model.JobPageableFilter;
-import lucrez.ceva.model.User;
+import lucrez.ceva.model.*;
 import lucrez.ceva.model.enums.JobType;
 
 import java.util.Date;
@@ -21,4 +18,5 @@ public interface IJobService {
     Long countByType(JobType jobType);
     Long countByDate(Date date);
     Long size();
+    List<JobAction> getHistory(User user);
 }

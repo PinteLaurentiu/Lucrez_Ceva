@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserAdminMapper {
-    private static UserAdminDto toDto(User user) {
+    public static UserAdminDto toDto(User user) {
         UserAdminDto dto = new UserAdminDto();
         dto.setAvatar(user.getAvatarPath());
         dto.setId(user.getId());

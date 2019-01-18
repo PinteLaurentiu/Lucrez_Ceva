@@ -15,4 +15,6 @@ public class JobDetailedDto extends JobSimpleDto {
     private String avatarPath;
     private String username;
     private Double salary;
+    private List<UserAdminDto> applications;
+    private Long userId;
 }

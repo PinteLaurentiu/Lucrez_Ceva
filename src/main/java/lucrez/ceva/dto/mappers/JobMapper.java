@@ -64,7 +64,7 @@ public class JobMapper {
         return jobs.stream().map((x)-> mapJobSimpleDto(x, current, new JobSimpleDto())).collect(Collectors.toList());
     }
 
-    private static JobSimpleDto mapJobSimpleDto(Job job, User current, JobSimpleDto jobSimpleDto) {
+    static JobSimpleDto mapJobSimpleDto(Job job, User current, JobSimpleDto jobSimpleDto) {
         jobSimpleDto.setId(job.getId());
         jobSimpleDto.setLocation(job.getLocation());
         jobSimpleDto.setTitle(job.getTitle());
@@ -92,6 +92,9 @@ public class JobMapper {
         dto.setUsername(job.getUser().getName());
         dto.setSalary(job.getSalary());
         dto.setTags(job.getTags().stream().map(JobTag::getTag).collect(Collectors.toList()));
+        dto.setApplications(job.getApplications().stream().map(x->UserAdminMapper.toDto(x.getUser()))
+                .collect(Collectors.toList()));
+        dto.setUserId(job.getUser().getId());
         return dto;
     }
 

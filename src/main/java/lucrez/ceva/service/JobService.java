@@ -2,8 +2,10 @@ package lucrez.ceva.service;
 
 import lombok.AllArgsConstructor;
 import lucrez.ceva.model.*;
+import lucrez.ceva.model.enums.Action;
 import lucrez.ceva.model.enums.JobAcceptanceType;
 import lucrez.ceva.model.enums.JobType;
+import lucrez.ceva.persistence.ApplicationRepository;
 import lucrez.ceva.persistence.JobRepository;
 import lucrez.ceva.service.interfaces.IJobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(onConstructor=@__({@Autowired}))
 public class JobService implements IJobService {
     private JobRepository jobRepository;
+    private ApplicationRepository applicationRepository;
 
     @Override
     public Job save(Job job) {
@@ -81,5 +84,15 @@ public class JobService implements IJobService {
     @Override
     public Long size() {
         return jobRepository.count();
+    }
+
+    @Override
+    public List<JobAction> getHistory(User user) {
+        List<Job> jobs = jobRepository.getByUser(user);
+        List<Application> applications = applicationRepository.getByUser(user);
+        final List<JobAction> actions = jobs.stream().map(x->new JobAction(x, x.getDate(), Action.Post))
+                .collect(Collectors.toList());
+        applications.stream().map(x->new JobAction(x.getJob(), x.getDate(), Action.Apply)).collect(Collectors.toCollection(()->actions));
+        return actions.stream().sorted((x,y)->y.getDate().compareTo(x.getDate())).collect(Collectors.toList());
     }
 }

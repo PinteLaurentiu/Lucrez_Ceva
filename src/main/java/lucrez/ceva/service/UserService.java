@@ -63,7 +63,7 @@ public class UserService implements IUserService {
 
     @Override
     public User get(Long id) {
-        return userRepo.getOne(id);
+        return userRepo.findOne(id);
     }
 
     @Override

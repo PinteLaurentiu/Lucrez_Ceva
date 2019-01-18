@@ -54,7 +54,7 @@ public class JobRepositoryImpl implements JobRepositoryCustom {
     private TypedQuery<Object[]> getJobWithTagsQuery(List<String> tags, JobFilter filter) {
         //noinspection JpaQlInspection
         TypedQuery<Object[]> query = entityManager.createQuery("select j," + InnerSelectTagMatches +
-                " from job j where j.date < :now" +
+                " from job j where j.date <= :now" +
                 getFilterString(filter) +
                 " order by matches desc, j.date desc", Object[].class);
         query.setParameter("now", new Date());
@@ -64,7 +64,7 @@ public class JobRepositoryImpl implements JobRepositoryCustom {
     }
 
     private TypedQuery<Job> getJobQuery(JobFilter filter) {
-        TypedQuery<Job> query = entityManager.createQuery("select j from job j where j.date < :now" +
+        TypedQuery<Job> query = entityManager.createQuery("select j from job j where j.date <= :now" +
                 getFilterString(filter) +
                 " order by j.date desc", Job.class);
         query.setParameter("now", new Date());
